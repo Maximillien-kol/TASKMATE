@@ -1,0 +1,17 @@
+{
+  "name": "Taskmaster",
+  "short_name": "Taskmaster",
+  "description": "Smart AI-powered productivity companion.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#10B981",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

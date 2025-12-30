@@ -1,0 +1,7 @@
+{
+  "name": "Taskmaster dashboard",
+  "description": "A smart productivity companion that uses Gemini AI to decompose complex tasks, prioritize your day, and provide actionable insights via natural language processing.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
