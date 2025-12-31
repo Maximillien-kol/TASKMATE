@@ -338,12 +338,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onBackToLanding }) => {
             </div>
 
             <div className="space-y-4">
-              {isLoading ? (
-                <div className="py-20 flex flex-col items-center justify-center text-center">
-                  <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
-                  <p className="text-sm text-slate-500">Loading your tasks...</p>
-                </div>
-              ) : filteredTodos.length > 0 ? (
+              {filteredTodos.length > 0 ? (
                 filteredTodos.map(todo => (
                   <TaskCard
                     key={todo.id}

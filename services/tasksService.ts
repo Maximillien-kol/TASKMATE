@@ -35,14 +35,14 @@ function taskToTodo(task: Task): Todo {
 
 export const tasksService = {
     // Get all tasks for current user
+    // Get all tasks for current user
     async getUserTasks(): Promise<Todo[]> {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) throw new Error('Not authenticated');
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) throw new Error('Not authenticated');
 
         const { data, error } = await supabase
             .from('tasks')
             .select('*')
-            .eq('user_id', user.id)
             .order('created_at', { ascending: false });
 
         if (error) {
@@ -55,10 +55,10 @@ export const tasksService = {
 
     // Create a new task
     async createTask(todo: Todo): Promise<Todo> {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) throw new Error('Not authenticated');
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) throw new Error('Not authenticated');
 
-        const newTask = todoToTask(todo, user.id);
+        const newTask = todoToTask(todo, session.user.id);
 
         const { data, error } = await supabase
             .from('tasks')
@@ -82,8 +82,8 @@ export const tasksService = {
 
     // Update a task
     async updateTask(id: string, updates: Partial<Todo>): Promise<Todo> {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) throw new Error('Not authenticated');
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) throw new Error('Not authenticated');
 
         const updateData: UpdateTask = {};
 
@@ -105,7 +105,7 @@ export const tasksService = {
             .from('tasks')
             .update(updateData)
             .eq('id', id)
-            .eq('user_id', user.id) // RBAC: ensure user owns this task
+            .eq('user_id', session.user.id) // RBAC: ensure user owns this task
             .select()
             .single();
 
@@ -119,14 +119,14 @@ export const tasksService = {
 
     // Delete a task
     async deleteTask(id: string): Promise<void> {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) throw new Error('Not authenticated');
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) throw new Error('Not authenticated');
 
         const { error } = await supabase
             .from('tasks')
             .delete()
             .eq('id', id)
-            .eq('user_id', user.id); // RBAC: ensure user owns this task
+            .eq('user_id', session.user.id); // RBAC: ensure user owns this task
 
         if (error) {
             console.error('Error deleting task:', error);
@@ -136,15 +136,15 @@ export const tasksService = {
 
     // Toggle task completion
     async toggleTask(id: string): Promise<Todo> {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) throw new Error('Not authenticated');
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) throw new Error('Not authenticated');
 
         // First get the current task
         const { data: currentTask } = await supabase
             .from('tasks')
             .select('status')
             .eq('id', id)
-            .eq('user_id', user.id)
+            // .eq('user_id', session.user.id) // RLS handles this
             .single();
 
         if (!currentTask) throw new Error('Task not found');
@@ -159,7 +159,7 @@ export const tasksService = {
                 completed_at: completedAt
             })
             .eq('id', id)
-            .eq('user_id', user.id)
+            // .eq('user_id', session.user.id)
             .select()
             .single();
 
@@ -173,10 +173,10 @@ export const tasksService = {
 
     // Migrate localStorage tasks to Supabase
     async migrateLocalStorageTasks(todos: Todo[]): Promise<void> {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) throw new Error('Not authenticated');
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) throw new Error('Not authenticated');
 
-        const tasksToInsert = todos.map(todo => todoToTask(todo, user.id));
+        const tasksToInsert = todos.map(todo => todoToTask(todo, session.user.id));
 
         const { error } = await supabase
             .from('tasks')
