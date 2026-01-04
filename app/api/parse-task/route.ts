@@ -52,6 +52,15 @@ Rules for title:
 - Example: "finish the project report by friday" → "Complete Project Report"
 - Example: "buy groceries milk eggs bread" → "Buy Groceries"
 
+Rules for time extraction (dueTime):
+- Extract specific times mentioned (e.g., "at 5pm", "at 14:00", "in the morning")
+- Convert 12-hour format to 24-hour format (HH:mm) strings
+- Default to likely business hours if ambiguous (e.g. "at 9" -> "09:00", "at 5" -> "17:00" for meetings)
+- Example: "Meeting at 3pm" -> "15:00"
+- Example: "Lunch at 12:30" -> "12:30"
+- Example: "Morning standup" -> "09:00" (or null if vague)
+- If no time is specified, return null
+
 Return a JSON object with this structure:
 {
   "title": "Clear, Action-Oriented Title",
@@ -59,23 +68,9 @@ Return a JSON object with this structure:
   "priority": "low" | "medium" | "high",
   "category": "category name",
   "dueDate": "YYYY-MM-DD or null",
-  "dueTime": "HH:mm or null (24-hour format)",
+  "dueTime": "HH:mm or null",
   "subTasks": [{"title": "subtask 1"}, {"title": "subtask 2"}]
-}
-
-Rules for Time Parsing:
-- Extract specific times if mentioned (e.g., "at 3pm", "at 14:00", "at 9", "at 5am")
-- Convert ALL times to 24-hour format (HH:mm)
-- Handle "am" and "pm" case-insensitively
-- If "am/pm" is missing but context implies business hours (9-5), assume user intent or default to 24h if > 12.
-- Examples:
-  - "at 2pm" -> "14:00"
-  - "at 2am" -> "02:00"
-  - "at 14" -> "14:00"
-  - "at 9" -> "09:00" (assume morning if ambiguous)
-  - "at 13pm" -> "13:00" (handle common user typo of 13pm meaning 1pm/13:00)
-  - "at 12am" -> "00:00"
-  - "at 12pm" -> "12:00"`;
+}`;
 
     const data = await callGroqAPI(prompt);
     return NextResponse.json(data);

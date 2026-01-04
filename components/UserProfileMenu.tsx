@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function UserProfileMenu() {
@@ -29,8 +30,7 @@ export default function UserProfileMenu() {
 
     const handleViewProfile = () => {
         setIsOpen(false);
-        // TODO: Navigate to profile page
-        router.push('/profile');
+        router.push('/settings');
     };
 
     // Get user initials for avatar
@@ -50,10 +50,22 @@ export default function UserProfileMenu() {
             {/* Avatar Button */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-9 h-9 rounded-full flex items-center justify-center text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+                className="w-9 h-9 rounded-full flex items-center justify-center text-slate-600 hover:bg-slate-100 transition-colors overflow-hidden"
                 aria-label="User menu"
             >
-                <i className="fas fa-user-circle text-2xl"></i>
+                {user?.user_metadata?.avatar_url ? (
+                    <Image
+                        src={user.user_metadata.avatar_url}
+                        alt="Profile"
+                        width={36}
+                        height={36}
+                        className="w-full h-full object-cover"
+                    />
+                ) : (
+                    <div className="w-full h-full flex items-center justify-center rounded-full bg-emerald-100 text-emerald-600 font-bold text-sm">
+                        {getInitials()}
+                    </div>
+                )}
             </button>
 
             {/* Dropdown Menu */}
@@ -62,8 +74,18 @@ export default function UserProfileMenu() {
                     {/* User Info Section */}
                     <div className="px-4 py-3 border-b border-slate-100">
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full flex items-center justify-center text-slate-400">
-                                <i className="fas fa-user-circle text-3xl"></i>
+                            <div className="w-10 h-10 rounded-full flex items-center justify-center text-slate-400 overflow-hidden">
+                                {user?.user_metadata?.avatar_url ? (
+                                    <Image
+                                        src={user.user_metadata.avatar_url}
+                                        alt="Profile"
+                                        width={40}
+                                        height={40}
+                                        className="w-full h-full object-cover"
+                                    />
+                                ) : (
+                                    <i className="fas fa-user-circle text-3xl"></i>
+                                )}
                             </div>
                             <div className="flex-1 min-w-0">
                                 <p className="text-sm font-semibold text-slate-900 truncate">

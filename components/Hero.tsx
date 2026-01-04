@@ -3,41 +3,60 @@
 
 import React from 'react';
 
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
+
 interface HeroProps {
   onGetStarted: () => void;
 }
 
 const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
+  const router = useRouter();
+  const { user, loading } = useAuth();
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const handleCtaClick = () => {
+    if (user) {
+      router.push('/dashboard');
+    } else {
+      onGetStarted();
+    }
+  };
+
   return (
-    <section className="relative overflow-hidden py-12 sm:py-24 lg:py-32 bg-white pt-20 sm:pt-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-20 sm:pt-28">
-        <div className="grid gap-8 sm:gap-12 lg:grid-cols-2 lg:gap-8 items-center">
-          <div className="flex flex-col items-center lg:items-start text-center lg:text-left gap-4 sm:gap-6">
-            <h1 className="text-4xl sm:text-5xl font-[900] leading-[1.1] tracking-tight text-slate-900 lg:text-7xl">
+    <section className="relative overflow-hidden py-16 sm:py-24 lg:py-32 bg-white pt-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-28">
+        <div className="grid gap-12 lg:grid-cols-2 lg:gap-8 items-center">
+          <div className="flex flex-col items-start gap-6">
+            <h1 className="text-5xl font-[900] leading-[1.1] tracking-tight text-slate-900 sm:text-6xl lg:text-7xl">
               Organize your work<br />and life, finally.
             </h1>
-            <p className="text-base sm:text-xl text-slate-600 leading-relaxed max-w-lg">
+            <p className="text-xl text-slate-600 leading-relaxed max-w-lg">
               The simplest way to manage tasks, collaborate with teams, and hit your deadlines without the stress.
             </p>
-            <div className="mt-6 flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto justify-center lg:justify-start">
+            <div className="mt-4 flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
               <button
-                onClick={onGetStarted}
-                className="flex h-10 sm:h-12 items-center justify-center rounded-xl bg-primary px-6 sm:px-10 text-sm sm:text-base font-medium text-white w-full sm:w-auto"
+                onClick={handleCtaClick}
+                className="flex h-12 items-center justify-center rounded-xl bg-primary px-10 text-base font-bold text-white w-full sm:w-auto hover:bg-emerald-600 transition-colors"
               >
-                Start for free
+                {mounted && !loading && user ? 'Go to Dashboard' : 'Start for free'}
               </button>
-              <button className="flex h-10 sm:h-12 items-center justify-center rounded-xl bg-white border border-slate-200 px-6 sm:px-10 text-sm sm:text-base font-medium text-slate-900 w-full sm:w-auto">
+              <button className="flex h-12 items-center justify-center rounded-xl bg-white border border-slate-200 px-10 text-base font-bold text-slate-900 w-full sm:w-auto">
                 View Demo
               </button>
             </div>
-            <div className="mt-5 sm:mt-6 flex items-center justify-center lg:justify-start gap-3 sm:gap-4 text-sm text-slate-500 font-medium">
-              <div className="flex -space-x-2 sm:-space-x-3">
+            <div className="mt-6 flex items-center gap-4 text-sm text-slate-500 font-medium">
+              <div className="flex -space-x-3">
                 {[1, 2, 3].map((i) => (
                   <img
                     key={i}
                     src={`https://picsum.photos/seed/${i + 10}/64/64`}
                     alt="User"
-                    className="h-7 w-7 sm:h-9 sm:w-9 rounded-full border-2 border-white ring-1 ring-slate-100 object-cover"
+                    className="h-9 w-9 rounded-full border-2 border-white ring-1 ring-slate-100 object-cover"
                   />
                 ))}
               </div>
@@ -47,7 +66,7 @@ const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
             </div>
           </div>
 
-          <div className="hidden md:block relative mx-auto w-full max-w-lg lg:max-w-none select-none">
+          <div className="relative mx-auto w-full max-w-lg lg:max-w-none select-none">
             <div className="flex flex-col gap-5 relative z-10">
               {/* Task 1: Completed */}
               <div className="flex items-center gap-4 rounded-[2rem] border border-slate-100 bg-white p-5">
@@ -71,6 +90,7 @@ const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
                 <div className="min-w-0 flex-1">
                   <h3 className="font-extrabold text-slate-900 text-xl">Website Redesign Launch</h3>
                   <div className="flex items-center gap-2 text-sm text-slate-500 font-semibold">
+                    <span className="material-symbols-outlined text-lg">schedule</span>
                     <span>Due in 2 hours</span>
                   </div>
                 </div>

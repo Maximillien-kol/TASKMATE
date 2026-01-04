@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import Features from '@/components/Features';
@@ -10,8 +11,10 @@ import Footer from '@/components/Footer';
 import AIDemo from '@/components/AIDemo';
 
 export default function LandingPage() {
+  const router = useRouter();
+
   const handleGetStarted = () => {
-    window.location.href = '/signup';
+    router.push('/signup');
   };
 
   return (

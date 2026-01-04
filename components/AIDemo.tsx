@@ -22,28 +22,35 @@ const AIDemo: React.FC = () => {
   return (
     <div className="bg-white rounded-3xl border border-slate-100 overflow-hidden max-w-3xl mx-auto">
       <div className="p-8">
-        <form onSubmit={handleSuggest} className="space-y-4 mr-4 sm:mr-0">
+        <form onSubmit={handleSuggest} className="space-y-4">
           <label className="block text-sm font-bold text-slate-700 uppercase tracking-wider">Try it yourself</label>
-          <div className="bg-white rounded-2xl border border-slate-200 p-1 focus-within:border-primary transition-colors">
-            <div className="flex gap-3">
+          <div className="bg-white rounded-[2rem] border border-slate-200 shadow-sm focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/20 transition-all p-2 mt-2">
+            <div className="flex flex-col">
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="type anything messy..."
-                className="flex-1 w-full h-full bg-transparent px-4 py-3 text-slate-900 placeholder:text-slate-400 font-normal text-xs sm:text-sm border-none focus:outline-none focus:ring-0"
+                placeholder="Ask Anything...."
+                className="w-full bg-transparent border-none focus:ring-0 outline-none px-4 py-3 text-md text-slate-800 placeholder-slate-400 font-medium"
+                disabled={loading}
               />
-              <button
-                disabled={loading || !input.trim()}
-                className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 ${input.trim() ? 'bg-slate-900 text-white hover:bg-slate-800' : 'bg-slate-200 text-slate-400'
-                  }`}
-              >
-                {loading ? (
-                  <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full"></div>
-                ) : (
-                  <span className="material-symbols-outlined">auto_awesome</span>
-                )}
-              </button>
+
+              <div className="flex items-center justify-between px-2 pb-1 mt-2">
+                <div className="flex items-center gap-1 sm:gap-2">
+
+                  <div className="flex items-center">
+                    <span className="bg-emerald-100 text-emerald-600 text-[10px] font-bold px-2 py-0.5 rounded-md mr-2">Beta</span>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loading || !input.trim()}
+                  className="w-10 h-10 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg disabled:shadow-none"
+                >
+                  {loading ? <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> : <i className="fas fa-arrow-right text-sm"></i>}
+                </button>
+              </div>
             </div>
           </div>
           <p className="text-xs text-slate-400 font-medium">Tip: Type anything messy, and we'll clean it up.</p>
@@ -54,10 +61,10 @@ const AIDemo: React.FC = () => {
             <div className="flex flex-col gap-4">
               <div className="flex items-start justify-between">
                 <div>
-                  <h4 className="text-sm font-medium text-slate-400 uppercase">Suggested Task</h4>
-                  <p className="text-xl font-bold text-slate-900">{result.title}</p>
+                  <h4 className="text-sm font-bold text-slate-400 uppercase">Suggested Task</h4>
+                  <p className="text-2xl font-black text-slate-900">{result.title}</p>
                 </div>
-                <div className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest ${result.priority === 'High' ? 'bg-red-100 text-red-600' :
+                <div className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest ${result.priority === 'High' ? 'bg-red-100 text-red-600' :
                   result.priority === 'Medium' ? 'bg-orange-100 text-orange-600' :
                     'bg-green-100 text-green-600'
                   }`}>

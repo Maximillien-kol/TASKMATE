@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Inter, Outfit } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/contexts/AuthContext';
+import CollaboratorInviteNotification from '@/components/CollaboratorInviteNotification';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit' });
@@ -47,6 +48,7 @@ export default function RootLayout({
       <body className={`${inter.variable} ${outfit.variable} font-sans`}>
         <AuthProvider>
           {children}
+          <CollaboratorInviteNotification />
         </AuthProvider>
       </body>
     </html>

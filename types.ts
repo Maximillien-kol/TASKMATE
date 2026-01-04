@@ -20,6 +20,7 @@ export interface Todo {
   subTasks: SubTask[];
   collaborators: string[];
   aiSuggested?: boolean;
+  completedAt?: number;
 }
 
 export interface AiInsight {
